@@ -3,42 +3,42 @@ import { useState, useEffect } from 'react';
 import './Pokedex.css'
 import { DexEntry } from './DexEntry';
 
-export const Pokedex = ({urls}) => {
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export const Pokedex = ({dexUrlEntries}) => {
+    const [allPokemonData, setAllPokemonData] = useState([]);
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchPokemonData = async () => {
-        try {
-          const promises = urls.map(item =>
-            fetch(item.url)
-            .then(response => {
-                if (!response.ok) {
-                  throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-              })
-          );
-  
-          const allResults = await Promise.all(promises);
-          setResults(allResults);
-        } catch (e) {
-          setError(e);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchPokemonData();
-  }, [urls]);
+    useEffect(() => {
+        const fetchPokemonData = async () => {
+            try {
+                const promises = dexUrlEntries.map(data =>
+                    fetch(data.url)
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error(`HTTP error! status: ${res.status}`);
+                        }
+                        return res.json();
+                    })
+                );
+    
+                const allPokemonData = await Promise.all(promises);
+                setAllPokemonData(allPokemonData);
+            } catch (e) {
+                setError(e);
+            }
+        };
+        fetchPokemonData();
+    }, [dexUrlEntries]);
+    if(error !== null) {
+        throw new Error(error);
+    }
 
-  return (
-    <div>
-      {Object.entries(results).map(([key, value]) => (
-        <DexEntry key={key} value={value}/>
-      ))}
-    </div>
-  );
+    return (
+        <div>
+            {Object.entries(allPokemonData).map(([key, value]) => (
+                <DexEntry key={key} value={value}/>
+            ))}
+        </div>
+    );å
 }
 
 export default Pokedex
