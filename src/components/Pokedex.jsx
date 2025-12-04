@@ -59,8 +59,8 @@ export const Pokedex = ({dexUrlEntries}) => {
     return (
         <ul className="flex flex-wrap list-none p-0 m-0 gap-2 items-center justify-center opacity-100">
             {allPokemonData.map((pokemonData) => (
-                <li>
-                    <DexEntry key={pokemonData.name} pokemon={pokemonData}/>
+                <li key={pokemonData.name}>
+                    <DexEntry pokemon={pokemonData}/>
                 </li>
             ))}
         </ul>
